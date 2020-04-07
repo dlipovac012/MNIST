@@ -1,13 +1,13 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from sklearn.datasets import fetch_openml
+from sklearn.linear_model import SGDClassifier
+from data import X, X_train, y_train_5
+from validation import validate
 
-mnist = fetch_openml('mnist_784', version=1, cache=True)
+model = SGDClassifier(random_state=42)
 
-X, y = mnist['data'], mnist['target']
-
-# some_digit = X[3]
+some_digit = X[0]
 # some_digit_image = some_digit.reshape(28, 28)
 
 # plt.imshow(some_digit_image, cmap=mpl.cm.binary, interpolation='nearest')
@@ -15,11 +15,12 @@ X, y = mnist['data'], mnist['target']
 # plt.show()
 
 # cast string to integer
-y = y.astype(np.uint8)
 
-X_train, X_test, y_train, y_test = X[:60000], X[60000:], y[:60000], y[60000:]
+print("Training the model...")
+model.fit(X_train, y_train_5)
 
-print(y_train[:10])
+is_five = model.predict([some_digit])
 
-y_train_5 = (y_train == 5)
-y_test_5 = (y_test == 5)
+validate(model)
+
+print(is_five)
